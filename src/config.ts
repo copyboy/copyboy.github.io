@@ -1,6 +1,6 @@
 import type { PostHideElements } from '~/content/config';
 
-export const Site = 'https://copyboy.github.io/';
+export const Site = 'https://zhangqingdong.cn/';
 export const SiteLanguage = 'zh';
 export const SiteTitle = '星辰之旅';
 export const SiteDescription = '追光逐梦，笔墨生花';
