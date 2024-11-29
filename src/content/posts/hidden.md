@@ -1,5 +1,5 @@
 ---
-title: a hidden post
+title: a hidden post by me
 slug: my-hidden-post
 description: some desc
 date: 2024-02-27T23:30:47+08:00
