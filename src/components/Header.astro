@@ -115,7 +115,7 @@ for (const platform in Socials) {
 			}
 			{!Hide.includes('themeToggler') && <ThemeToggler />}
 		</div>
-		<Fragment transition:persist>
+		<div transition:persist>
 			{!Hide.includes('siteDescription') && <div>{SiteDescription}</div>}
 			{
 				socials.length > 0 && (
@@ -132,7 +132,7 @@ for (const platform in Socials) {
 					</div>
 				)
 			}
-		</Fragment>
+		</div>
 	</div>
 </header>
 

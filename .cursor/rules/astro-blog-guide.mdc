@@ -1,0 +1,86 @@
+---
+description: 本项目是使用Astro框架构建的技术博客网站
+globs: 
+alwaysApply: false
+---
+# Astro博客项目指南
+
+## 项目概述
+- 本项目是使用Astro框架构建的技术博客网站
+- 主要特点：
+  - 快速加载的静态网站
+  - SEO友好的内容组织
+  - 响应式设计，适配各种设备
+  - 支持Markdown和MDX内容编写
+  - 内置代码语法高亮和暗黑模式
+
+## 目录结构
+- 博客文章: [src/content/posts/](mdc:src/content/posts)
+- UI组件: [src/components/](mdc:src/components) 
+- 图片和静态资源: [src/content/attachments/](mdc:src/content/attachments)
+- 页面: [src/pages/](mdc:src/pages)
+- 布局: [src/layouts/](mdc:src/layouts)
+- 工具函数: [src/utils/](mdc:src/utils)
+- 资源文件: [src/assets/](mdc:src/assets)
+
+## 技术栈
+- **框架**: Astro (https://astro.build/)
+- **前端库**: TypeScript, React (可选组件)
+- **样式**: Tailwind CSS
+- **内容**: Markdown/MDX
+- **部署**: Vercel/Netlify
+
+## 配置文件
+- 项目配置: [astro.config.mjs](mdc:astro.config.mjs)
+- 内容配置: [src/content/config.ts](mdc:src/content/config.ts)
+- 主题配置: [src/config.ts](mdc:src/config.ts)
+- Tailwind配置: [tailwind.config.mjs](mdc:tailwind.config.mjs)
+- TypeScript配置: [tsconfig.json](mdc:tsconfig.json)
+- 包管理器配置: [package.json](mdc:package.json)
+
+## 规范文档
+以下规范文档定义了项目的各个方面：
+
+1. **内容标准**: [内容标准规范](mdc:.cursor/rules/content-standards.mdc)
+   - 文章格式、标签管理、质量要求
+
+2. **内容分类**: [内容分类规划](mdc:.cursor/rules/content-categories.mdc)
+   - 学习、工作、生活、絮叨四大类内容指南
+
+3. **内容示例**: [内容示例与模板](mdc:.cursor/rules/content-examples.mdc)
+   - 四大分类的文章结构示例和模板
+
+4. **组件与布局**: [组件和布局规范](mdc:.cursor/rules/components-layout.mdc)
+   - UI组件、页面布局、样式指南
+
+5. **工作流与部署**: [工作流和部署规范](mdc:.cursor/rules/workflow-deployment.mdc)
+   - 开发流程、发布流程、质量控制
+
+6. **性能与SEO**: [性能优化与SEO规范](mdc:.cursor/rules/performance-seo.mdc)
+   - 性能指标、优化策略、搜索引擎优化
+
+7. **国际化与可访问性**: [国际化与可访问性规范](mdc:.cursor/rules/i18n-accessibility.mdc)
+   - 多语言支持、WCAG标准、语义化HTML
+
+8. **代码质量与测试**: [代码质量与测试规范](mdc:.cursor/rules/code-quality-testing.mdc)
+   - 代码风格、测试策略、持续集成
+
+## 开发指南
+- 本地开发服务器启动: `npm run dev` 或 `bun run dev`
+- 生产环境构建: `npm run build` 或 `bun run build`
+- 预览构建结果: `npm run preview` 或 `bun run preview`
+
+## 参考资源
+- Astro官方文档: https://docs.astro.build/
+- Tailwind CSS文档: https://tailwindcss.com/docs
+- MDX语法指南: https://mdxjs.com/docs/
+
+## 内容要求
+- 文章结构：标题、日期、标签、摘要、正文
+- 代码块使用三反引号加语言标识
+- 图片路径应使用相对路径，引用src/content/attachments中的资源
+
+## 工作流程
+- 文章内容修改应通过Git版本控制
+- 提交信息应包含文章标题和修改内容
+- 发布前确保所有外部链接有效

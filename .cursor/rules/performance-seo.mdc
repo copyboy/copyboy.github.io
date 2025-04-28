@@ -1,0 +1,78 @@
+---
+description: 性能优化与SEO规范
+globs: 
+alwaysApply: false
+---
+# 性能优化与SEO规范
+
+## 网站性能优化
+- 图片优化原则：
+  - 使用WebP格式替代JPEG/PNG
+  - 图片尺寸不超过实际显示需求
+  - 使用`loading="lazy"`属性实现懒加载
+  - 设置恰当的`width`和`height`属性避免布局偏移
+- JavaScript优化：
+  - 使用Astro的岛屿架构(Islands Architecture)最小化JS加载
+  - 组件使用`client:visible`或`client:idle`延迟加载
+  - 避免不必要的大型依赖包
+- CSS优化：
+  - 使用Tailwind自动清除未使用的CSS
+  - 使用CSS变量统一主题管理
+  - 避免过深的CSS选择器嵌套
+- 资源加载策略：
+  - 关键资源预加载：`<link rel="preload">`
+  - 字体优化：使用`font-display: swap`确保文本可见性
+  - 尽量减少阻塞渲染的资源
+
+## 性能指标目标
+- 页面加载性能：
+  - 首次内容绘制(FCP) < 1.8秒
+  - 最大内容绘制(LCP) < 2.5秒
+  - 首次输入延迟(FID) < 100毫秒
+  - 累积布局偏移(CLS) < 0.1
+- Lighthouse得分目标：
+  - 性能: 90+
+  - 可访问性: 95+
+  - 最佳实践: 95+
+  - SEO: 95+
+
+## SEO最佳实践
+- 元数据优化：
+  - 每个页面必须有唯一的`<title>`和meta描述
+  - 使用结构化数据(Schema.org)标记内容
+  - 实现Open Graph和Twitter卡片标签
+- 内容策略：
+  - 使用语义化HTML标签(`<article>`, `<nav>`, `<aside>`等)
+  - 正确使用标题层级(`<h1>`到`<h6>`)
+  - 包含适量关键词，但避免关键词堆砌
+  - 内部链接策略合理，加强重要内容
+- 技术优化：
+  - 实现XML sitemap: [astro.config.mjs](mdc:astro.config.mjs)
+  - 配置robots.txt
+  - 实现规范URL(canonical URL)
+  - 移动设备友好的设计
+
+## 监控与分析
+- 使用Web Vitals监控真实用户体验
+- 定期进行Lighthouse审核
+- 设置Google Search Console监控搜索表现
+- 分析用户行为数据，持续优化内容
+
+## 图片SEO最佳实践
+- 图片文件名应包含关键词，使用连字符分隔
+- 始终使用`alt`属性提供描述性文本
+- 为大型图片实现响应式设计
+- 示例代码：
+  ```html
+  <img 
+    src="/attachments/java-concurrency-example.webp" 
+    alt="Java并发编程示例图表" 
+    width="800" 
+    height="450" 
+    loading="lazy"
+  />
+  ```
+
+## 参考资源
+- Web Vitals: https://web.dev/vitals/
+- Google SEO指南: https://developers.google.com/search/docs/fundamentals/seo-starter-guide

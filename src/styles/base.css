@@ -1,0 +1,20 @@
+:root {
+  --color-primary: #3b82f6;
+  --color-primary-dark: #60a5fa;
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.dark .text-primary-dark {
+  color: var(--color-primary-dark);
+}
+
+.bg-primary-5 {
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+.dark .bg-primary-dark-10 {
+  background-color: rgba(96, 165, 250, 0.1);
+}

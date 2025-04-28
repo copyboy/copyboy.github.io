@@ -1,0 +1,69 @@
+---
+description: 组件和布局规范
+globs: 
+alwaysApply: false
+---
+# 组件和布局规范
+
+## 组件结构
+- UI组件存放在 [src/components/](mdc:src/components) 目录
+- 组件应遵循单一职责原则
+- 公共组件应具备良好复用性和可配置性
+- 组件命名规范：
+  - 使用PascalCase命名法（如`BlogCard.tsx`）
+  - 文件名应能清晰表达组件功能
+  - 相关组件可放在同一子目录中
+- 组件应包含适当的TypeScript类型定义
+- 优先使用函数式组件和Hooks
+
+## 布局模板
+- 页面布局模板存放在 [src/layouts/](mdc:src/layouts) 目录
+- 主要布局包括：
+  - 默认布局：适用于大多数页面
+  - 博客布局：专门用于博客文章页面
+  - 归档布局：用于展示归档和标签分类页面
+- 布局应支持博客的统一视觉风格
+- 支持深色模式和浅色模式切换
+- 布局应具有良好的可访问性(a11y)支持
+
+## 页面结构
+- 页面文件存放在 [src/pages/](mdc:src/pages) 目录
+- 遵循Astro路由规则，文件路径对应URL路径：
+  - `src/pages/index.astro` → `/`
+  - `src/pages/blog/index.astro` → `/blog`
+  - `src/pages/blog/[slug].astro` → 动态路由，对应各个博客文章
+- 博客列表页应支持分页和标签筛选
+- 确保404页面和其他错误页面有友好的用户体验
+
+## 样式指南
+- 使用Tailwind CSS进行样式设计
+- 配置文件: [tailwind.config.mjs](mdc:tailwind.config.mjs)
+- 采用移动优先的响应式设计原则
+- 颜色系统：
+  - 主要颜色：品牌主色
+  - 次要颜色：辅助色
+  - 中性颜色：文本和背景色
+- 字体系统：
+  - 标题字体：醒目但专业
+  - 正文字体：易读性优先
+- 确保颜色对比度满足WCAG 2.1 AA级标准
+
+## 资源使用
+- 图片和静态资源存放在 [src/content/attachments/](mdc:src/content/attachments) 或 [public/](mdc:public) 目录
+- 确保图片经过适当压缩，提高加载性能
+- 使用WebP等现代图片格式
+- 为不同设备提供响应式图片：
+  ```html
+  <picture>
+    <source srcset="/path/to/image.webp" type="image/webp">
+    <source srcset="/path/to/image.jpg" type="image/jpeg">
+    <img src="/path/to/image.jpg" alt="图片描述">
+  </picture>
+  ```
+
+## 交互设计
+- 保持用户界面简洁直观
+- 提供明确的视觉反馈和状态指示
+- 确保表单元素易于使用和理解
+- 页面过渡应流畅自然
+- 确保键盘导航可用性

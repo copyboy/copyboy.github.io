@@ -1,0 +1,110 @@
+---
+description: 代码质量与测试规范
+globs: 
+alwaysApply: false
+---
+# 代码质量与测试规范
+
+## 代码风格指南
+- TypeScript/JavaScript代码风格：
+  - 使用[Biome](mdc:biome.json)进行代码格式化和lint
+  - 缩进使用2个空格
+  - 行尾不留空格
+  - 文件末尾留一个空行
+  - 使用单引号而非双引号定义字符串
+  - 使用camelCase命名变量和函数
+  - 使用PascalCase命名类和组件
+- Astro组件风格：
+  - 组件逻辑部分放在顶部
+  - HTML/JSX部分清晰缩进
+  - 复杂组件逻辑提取到单独的工具函数
+
+## 类型安全
+- 使用TypeScript进行类型定义
+- 避免使用`any`类型，优先使用具体类型或泛型
+- 为所有组件props定义接口或类型
+- 示例：
+  ```typescript
+  interface BlogPostProps {
+    title: string;
+    date: Date;
+    content: string;
+    tags: string[];
+    author?: string; // 可选属性
+  }
+  
+  const BlogPost = ({ title, date, content, tags, author = '匿名' }: BlogPostProps) => {
+    // 组件实现
+  };
+  ```
+
+## 代码质量准则
+- 可维护性原则：
+  - 单一职责：每个函数/组件只做一件事
+  - 函数长度控制在30行以内
+  - 避免深层嵌套（最多3层）
+  - 使用有意义的变量名和函数名
+- 性能考虑：
+  - 避免不必要的计算和重渲染
+  - 合理使用缓存和记忆化
+  - 懒加载非关键组件和数据
+- 代码复用：
+  - 提取公共函数到工具库
+  - 创建可复用组件
+
+## 评审流程
+- 提交前自审：确保代码符合风格指南和质量标准
+- 代码评审流程：
+  - 关注功能正确性
+  - 检查边界条件处理
+  - 评估错误处理
+  - 考虑性能影响
+
+## 测试策略
+- 单元测试：
+  - 使用Vitest进行单元测试
+  - 测试覆盖率目标：70%以上
+  - 重点测试工具函数和复杂逻辑
+- 组件测试：
+  - 使用@testing-library/react测试React组件
+  - 使用Playwright组件测试测试Astro组件
+- 端到端测试：
+  - 使用Playwright进行关键用户流程测试
+  - 确保主要功能在不同浏览器中正常工作
+
+## 测试最佳实践
+- 测试应该是独立的，不依赖于其他测试
+- 每个测试只测试一个概念
+- 使用 arrange-act-assert 模式组织测试代码
+- 示例：
+  ```typescript
+  test('formatDate 格式化日期为 YYYY-MM-DD 格式', () => {
+    // Arrange
+    const date = new Date('2023-10-15');
+    
+    // Act
+    const formattedDate = formatDate(date);
+    
+    // Assert
+    expect(formattedDate).toBe('2023-10-15');
+  });
+  ```
+
+## 持续集成
+- 使用GitHub Actions进行CI流程
+- 每次Pull Request自动运行：
+  - 代码风格检查
+  - 类型检查
+  - 单元测试
+  - 构建检查
+- 配置文件: [.github/workflows](mdc:.github/workflows)
+
+## 错误监控
+- 实现前端错误捕获和上报
+- 使用structured logging记录关键信息
+- 设置适当的告警机制
+
+## 文档要求
+- 复杂函数应包含JSDoc注释
+- 项目应有README文档，包含启动和开发指南
+- 自定义钩子和工具函数应有使用示例

@@ -1,0 +1,42 @@
+---
+import ScaffoldLayout from '~/layouts/ScaffoldLayout.astro';
+import PostCard from "../../components/PostCard.astro";
+import CategorySidebar from "../../components/CategorySidebar.astro";
+import { getCollection } from "astro:content";
+
+const allPosts = await getCollection("posts", ({ data }) => {
+  return !data.hidden && data.category === "生活";
+});
+
+// 对文章按日期进行排序
+const sortedPosts = allPosts.sort((a, b) => {
+  const aDate = a.data.lastmod ?? a.data.date;
+  const bDate = b.data.lastmod ?? b.data.date;
+  if (!aDate) return 1;
+  if (!bDate) return -1;
+  return bDate.valueOf() - aDate.valueOf();
+});
+---
+
+<ScaffoldLayout title="生活 - 文章分类" description="旅行、美食、健康、读书等生活体验分享" currentNav="Categories">
+  <h1 class="mb-8 text-4xl font-extrabold">分类: 生活</h1>
+  
+  <div class="flex flex-col lg:flex-row gap-8">
+    <!-- 侧边栏 -->
+    <div class="w-full lg:w-1/4 lg:sticky lg:top-8 lg:self-start">
+      <CategorySidebar posts={allPosts} categoryName="生活" />
+    </div>
+    
+    <!-- 主内容区 -->
+    <div class="w-full lg:w-3/4">
+      {sortedPosts.length > 0 ? (
+        sortedPosts.map((post) => <PostCard {...post} />)
+      ) : (
+        <div class="text-center py-20">
+          <p class="text-xl">暂无文章</p>
+          <p class="mt-2">敬请期待精彩内容</p>
+        </div>
+      )}
+    </div>
+  </div>
+</ScaffoldLayout> 

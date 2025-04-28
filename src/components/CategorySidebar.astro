@@ -1,0 +1,174 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { CollectionEntry } from 'astro:content';
+
+interface TreeNode {
+  name: string;
+  path?: string;
+  children: Record<string, TreeNode>;
+  posts: CollectionEntry<'posts'>[];
+}
+
+export interface Props {
+  posts: CollectionEntry<'posts'>[];
+  categoryName: string;
+  currentSlug?: string;  // 添加当前文章slug参数
+}
+
+const { posts, categoryName, currentSlug } = Astro.props;
+
+// 根据标签和post.data.series构建树形结构
+function buildTree(posts: CollectionEntry<'posts'>[]) {
+  // 按照order排序文章
+  const sortedPosts = [...posts].sort((a, b) => {
+    if (a.data.order && b.data.order) {
+      return a.data.order - b.data.order;
+    }
+    // 如果没有order属性，按日期排序
+    const aDate = a.data.lastmod ?? a.data.date;
+    const bDate = b.data.lastmod ?? b.data.date;
+    if (!aDate) return 1;
+    if (!bDate) return -1;
+    return bDate.valueOf() - aDate.valueOf();
+  });
+
+  const root: TreeNode = { name: 'root', children: {}, posts: [] };
+  
+  // 首先按series分组
+  sortedPosts.forEach(post => {
+    if (post.data.series) {
+      if (!root.children[post.data.series]) {
+        root.children[post.data.series] = {
+          name: post.data.series,
+          children: {},
+          posts: []
+        };
+      }
+      root.children[post.data.series].posts.push(post);
+    } else {
+      // 没有series的文章按主要标签分组
+      const mainTag = post.data.tags?.[0];
+      if (mainTag) {
+        if (!root.children[mainTag]) {
+          root.children[mainTag] = {
+            name: mainTag,
+            children: {},
+            posts: []
+          };
+        }
+        root.children[mainTag].posts.push(post);
+      } else {
+        // 没有标签的文章放在"其他"分组
+        if (!root.children['其他']) {
+          root.children['其他'] = {
+            name: '其他',
+            children: {},
+            posts: []
+          };
+        }
+        root.children['其他'].posts.push(post);
+      }
+    }
+  });
+  
+  return root;
+}
+
+const tree = buildTree(posts);
+
+// 递归渲染树形结构组件
+const renderTreeNode = (node: TreeNode, isRoot = false, expanded = true) => {
+  if (isRoot) {
+    return Object.values(node.children).map((child) => renderTreeNode(child));
+  }
+  
+  // 检查当前组是否包含当前文章
+  const containsCurrentPost = currentSlug && node.posts.some(post => post.slug === currentSlug);
+  // 如果组包含当前文章，默认展开
+  const isExpanded = expanded || containsCurrentPost;
+  
+  return (
+    `<div class="mb-4">
+      <div class="font-medium flex items-center cursor-pointer group" data-tree-toggle>
+        <Icon name="ri:folder-line" class="size-5 mr-2 text-amber-500 dark:text-amber-400" />
+        <span class="text-lg group-hover:text-zinc-800 dark:group-hover:text-zinc-100">${node.name}</span>
+        <span class="ml-2 text-zinc-500 dark:text-zinc-400 text-sm">(${node.posts.length})</span>
+        <Icon name="${isExpanded ? 'ri:arrow-down-s-line' : 'ri:arrow-right-s-line'}" class="size-5 ml-auto transition-transform transform ${isExpanded ? 'rotate-0' : '-rotate-90'}" />
+      </div>
+      <div class="ml-6 mt-2 ${isExpanded ? 'block' : 'hidden'}" data-tree-content>
+        <ul class="space-y-1">
+          ${node.posts.map(post => {
+            const isActive = currentSlug && post.slug === currentSlug;
+            return `
+              <li>
+                <a href="/posts/${post.slug}" 
+                   class="flex items-center py-1 ${isActive 
+                     ? 'text-primary dark:text-primary-dark font-medium bg-primary/5 dark:bg-primary-dark/10 rounded px-2 -ml-2' 
+                     : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'} truncate">
+                  <Icon name="ri:article-line" class="size-4 mr-2 flex-shrink-0" />
+                  <span class="truncate">${post.data.title}</span>
+                </a>
+              </li>
+            `;
+          }).join('')}
+        </ul>
+        ${Object.values(node.children).length > 0 ? 
+          `<div class="mt-2">
+            ${Object.values(node.children).map(child => renderTreeNode(child)).join('')}
+          </div>` : 
+          ''
+        }
+      </div>
+    </div>`
+  );
+};
+---
+
+<div class="sidebar w-full lg:w-64 lg:flex-shrink-0 h-full">
+  <div class="bg-white/10 backdrop-blur-sm dark:bg-zinc-800/30 p-4 rounded-xl border border-zinc-200 dark:border-zinc-700 sticky top-8">
+    <h2 class="text-xl font-bold mb-4 flex items-center">
+      <Icon name="ri:folder-open-line" class="size-6 mr-2 text-amber-500 dark:text-amber-400" />
+      {categoryName}目录
+    </h2>
+    
+    <div class="tree-view">
+      {Object.values(tree.children).length > 0 ? (
+        <div set:html={renderTreeNode(tree, true)} />
+      ) : (
+        <p class="text-zinc-500 dark:text-zinc-400">暂无文章</p>
+      )}
+    </div>
+  </div>
+</div>
+
+<script>
+// 树形结构的折叠/展开功能
+document.addEventListener('DOMContentLoaded', () => {
+  const toggles = document.querySelectorAll('[data-tree-toggle]');
+  
+  toggles.forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const content = toggle.nextElementSibling;
+      const arrow = toggle.querySelector('[name^="ri:arrow"]');
+      
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        content.classList.add('block');
+        if (arrow) {
+          arrow.setAttribute('name', 'ri:arrow-down-s-line');
+          arrow.classList.remove('-rotate-90');
+          arrow.classList.add('rotate-0');
+        }
+      } else {
+        content.classList.remove('block');
+        content.classList.add('hidden');
+        if (arrow) {
+          arrow.setAttribute('name', 'ri:arrow-right-s-line');
+          arrow.classList.remove('rotate-0');
+          arrow.classList.add('-rotate-90');
+        }
+      }
+    });
+  });
+});
+</script> 

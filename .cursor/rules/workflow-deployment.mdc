@@ -1,0 +1,46 @@
+---
+description: 工作流和部署规范
+globs: 
+alwaysApply: false
+---
+# 工作流和部署规范
+
+## 开发流程
+- 遵循特性分支工作流(Feature Branch Workflow)
+- 每个新特性或修复应创建独立分支
+- 分支命名规范：`feature/描述`、`fix/描述`或`post/文章名称`
+- 本地开发使用命令：`npm run dev`或`bun run dev`
+
+## 发布流程
+- 发布前检查清单：
+  1. 所有文章通过语法和格式检查
+  2. 图片资源已优化压缩
+  3. 链接有效性验证（内部和外部链接）
+  4. 所有页面响应式设计测试
+- 使用版本控制工具：[.git](mdc:.git)
+- 提交信息格式：`[类型] 主题: 描述`
+  - 类型包括：`post`(新文章)、`update`(更新)、`fix`(修复)
+- 示例：`[post] Java: 添加Java高级技术文章`
+
+## 部署配置
+- 部署配置文件：[astro.config.mjs](mdc:astro.config.mjs)和[vercel.json](mdc:vercel.json)
+- 构建命令：`npm run build`或`bun run build`
+- 构建输出目录：`dist/`
+
+## 质量控制
+- 使用Biome进行代码格式化：[biome.json](mdc:biome.json)
+- 每次部署前进行性能检测
+- 定期审查和更新过时内容
+- 监控网站性能，优化加载时间
+
+## SEO优化
+- 每篇文章必须包含合适的meta描述
+- 标题应包含关键词，但避免过度优化
+- URL结构应简洁明了
+- 图片应包含alt文本描述
+
+## 发布后维护
+- 定期备份内容
+- 监控网站访问统计
+- 根据用户反馈调整内容策略
+- 定期更新依赖包版本

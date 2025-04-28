@@ -2,6 +2,9 @@
 import type { CollectionEntry } from 'astro:content';
 import MarkdownLayout from '~/layouts/MarkdownLayout.astro';
 import { getPosts } from '~/utils/collection';
+import { getCollection } from 'astro:content';
+import CategorySidebar from '~/components/CategorySidebar.astro';
+import ArticleNavigation from '~/components/ArticleNavigation.astro';
 
 export async function getStaticPaths() {
 	return (await getPosts()).map((post) => ({
@@ -24,8 +27,28 @@ if (typeof remarkPluginFrontmatter.lastmod === 'string') {
 	post.data.lastmod = new Date(remarkPluginFrontmatter.lastmod);
 }
 post.data.readingTime = remarkPluginFrontmatter.readingTime;
+
+// 获取同一分类的所有文章
+const categoryPosts = await getCollection("posts", ({ data }) => {
+	return !data.hidden && data.category === post.data.category;
+});
 ---
 
 <MarkdownLayout {...post.data} socialImage={socialImage} currentNav="Blog">
-	<Content />
+	<div class="flex flex-col lg:flex-row gap-8">
+		{post.data.category === "学习" && (
+			<div class="lg:w-1/4">
+				<CategorySidebar 
+					posts={categoryPosts} 
+					categoryName={post.data.category} 
+					currentSlug={post.slug} 
+				/>
+			</div>
+		)}
+		
+		<div class={post.data.category === "学习" ? "lg:w-3/4" : "w-full"}>
+			<Content />
+			<ArticleNavigation currentSlug={post.slug} />
+		</div>
+	</div>
 </MarkdownLayout>

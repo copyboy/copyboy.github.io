@@ -1,0 +1,89 @@
+---
+description: 博客内容标准规范
+globs: 
+alwaysApply: false
+---
+# 博客内容标准规范
+
+## 标签管理
+- 每篇文章必须包含至少一个标签
+- 标签应准确描述文章内容，便于分类和检索
+- 标签在文章front matter中定义，示例:
+  ```markdown
+  ---
+  title: "Java高级技术"
+  date: "2023-10-15"
+  category: "学习"
+  tags: ["Java", "高级", "编程"]
+  description: "探索Java高级编程技术，包括并发、反射和函数式编程"
+  author: "作者名称"
+  image: 
+    src: "/attachments/java-banner.jpg"
+    alt: "Java编程概念图"
+  draft: false
+  ---
+  ```
+- 常用标签维护在标签库中，优先使用已有标签
+
+## 内容分类
+- 每篇文章必须指定一个`category`字段，值为以下四类之一：
+  - `学习`：技术教程、学习笔记、知识分享
+  - `工作`：职场经验、项目管理、效率工具
+  - `生活`：兴趣爱好、旅行、健康、读书
+  - `絮叨`：随想、日常记录、碎碎念
+- 文章应按分类组织到对应子目录中：
+  - 学习类：`src/content/posts/learning/`
+  - 工作类：`src/content/posts/work/`
+  - 生活类：`src/content/posts/life/`
+  - 絮叨类：`src/content/posts/thoughts/`
+- 更多分类细节参考[内容分类规划](mdc:.cursor/rules/content-categories.mdc)
+
+## Markdown格式规范
+- 标题层级规范：
+  - H1(`#`): 文章主标题，仅使用一次
+  - H2(`##`): 主要章节标题
+  - H3(`###`): 子章节标题
+  - 最多使用到H4(`####`)，避免过深嵌套
+- 代码块使用三反引号加语言标识，例如:
+  ```java
+  public class HelloWorld {
+      public static void main(String[] args) {
+          System.out.println("Hello, World!");
+      }
+  }
+  ```
+- 图片插入格式: `![图片描述](mdc:attachments/图片名称.png)`
+- 链接格式: `[链接文本](mdc:链接URL)`
+- 引用格式: `> 引用内容`
+- 列表格式：使用`-`或`1.`创建无序或有序列表
+- 强调格式：使用`*斜体*`和`**粗体**`
+
+## 内容质量要求
+- 文章应保持技术前沿性和准确性
+- 避免重复内容和冗余信息
+- 专业术语使用应准确统一
+- 每篇文章应包含以下部分：
+  1. 引言：简要介绍文章主题和目标
+  2. 正文：清晰的章节划分，逻辑流畅
+  3. 结论：总结要点或提出展望
+  4. 参考资料：引用的文献或资源链接
+- 定期检查和更新已发布内容
+- 代码片段应当可执行、无错误
+
+## 多媒体使用指南
+- 每篇文章应包含至少一张特色图片
+- 图片分辨率要求：宽度不小于800像素
+- 支持嵌入视频（使用iframe标签）
+- 支持嵌入交互式元素（如CodePen、JSFiddle等）
+
+## 内容分类指南
+- 技术文章：深入特定技术领域，提供实用指导
+- 教程类：步骤清晰的操作指南，便于读者跟随学习
+- 观点类：对技术趋势的分析和见解
+- 新闻类：报道技术领域最新动态
+
+## 示例文件
+参考案例: [src/content/posts/](mdc:src/content/posts)
+
+## 关键组件
+内容配置: [src/content/config.ts](mdc:src/content/config.ts)

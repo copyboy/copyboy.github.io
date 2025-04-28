@@ -1,0 +1,84 @@
+---
+import { Icon } from "astro-icon/components";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+
+interface Props {
+  currentSlug: string;
+}
+
+const { currentSlug } = Astro.props;
+
+// 获取所有文章
+const allPosts = await getCollection('posts', ({ data }) => !data.hidden);
+
+// 查找当前文章
+const currentPost = allPosts.find(post => post.slug === currentSlug);
+if (!currentPost) {
+  throw new Error(`无法找到当前文章: ${currentSlug}`);
+}
+
+// 查找前一篇和后一篇文章
+let prevPost: CollectionEntry<'posts'> | undefined;
+let nextPost: CollectionEntry<'posts'> | undefined;
+
+// 如果有明确的prev和next字段，优先使用
+if (currentPost.data.prev) {
+  prevPost = allPosts.find(post => post.slug === currentPost.data.prev);
+}
+
+if (currentPost.data.next) {
+  nextPost = allPosts.find(post => post.slug === currentPost.data.next);
+}
+
+// 如果没有明确指定，尝试找同系列中按顺序排列的文章
+if (!prevPost || !nextPost) {
+  // 获取同系列文章
+  const sameSeries = allPosts.filter(
+    post => post.data.series === currentPost.data.series
+  ).sort((a, b) => {
+    // 使用order排序，如果没有则按日期排
+    if (a.data.order && b.data.order) {
+      return a.data.order - b.data.order;
+    }
+    const aDate = a.data.lastmod || a.data.date;
+    const bDate = b.data.lastmod || b.data.date;
+    return aDate.getTime() - bDate.getTime();
+  });
+
+  // 找到当前文章在系列中的位置
+  const currentIndex = sameSeries.findIndex(post => post.slug === currentSlug);
+  
+  if (currentIndex > 0 && !prevPost) {
+    prevPost = sameSeries[currentIndex - 1];
+  }
+  
+  if (currentIndex < sameSeries.length - 1 && !nextPost) {
+    nextPost = sameSeries[currentIndex + 1];
+  }
+}
+---
+
+<div class="article-navigation my-8 flex flex-col md:flex-row justify-between border-t border-b border-zinc-200 dark:border-zinc-700 py-4">
+  {prevPost && (
+    <a href={`/posts/${prevPost.slug}`} class="prev-post py-2 flex items-start gap-2 group">
+      <Icon name="ri:arrow-left-s-line" class="w-5 h-5 mt-1 group-hover:-translate-x-1 transition-transform" />
+      <div>
+        <div class="text-sm text-zinc-500 dark:text-zinc-400">上一篇</div>
+        <div class="font-medium group-hover:text-primary dark:group-hover:text-primary-dark transition-colors">{prevPost.data.title}</div>
+      </div>
+    </a>
+  )}
+  
+  {!prevPost && <div></div>}
+  
+  {nextPost && (
+    <a href={`/posts/${nextPost.slug}`} class="next-post py-2 flex items-start gap-2 text-right group ml-auto">
+      <div>
+        <div class="text-sm text-zinc-500 dark:text-zinc-400">下一篇</div>
+        <div class="font-medium group-hover:text-primary dark:group-hover:text-primary-dark transition-colors">{nextPost.data.title}</div>
+      </div>
+      <Icon name="ri:arrow-right-s-line" class="w-5 h-5 mt-1 group-hover:translate-x-1 transition-transform" />
+    </a>
+  )}
+</div>

@@ -26,7 +26,8 @@ const { page } = Astro.props;
 const { tag } = Astro.params;
 ---
 
-<ScaffoldLayout title={tag} description={`Posts with tag ${tag}`} currentNav="Tags">
+<ScaffoldLayout title={`${tag} - 标签`} description={`与标签"${tag}"相关的文章`} currentNav="Tags">
+	<h1 class="mb-8 text-4xl font-extrabold">标签: {tag}</h1>
 	{page.data.map((post) => <PostCard {...post} />)}
 	<Paginator {...page} />
 </ScaffoldLayout>

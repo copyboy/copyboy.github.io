@@ -1,0 +1,82 @@
+---
+import ScaffoldLayout from '~/layouts/ScaffoldLayout.astro';
+import { getCollection } from "astro:content";
+import { Icon } from 'astro-icon/components';
+
+const allPosts = await getCollection("posts", ({ data }) => {
+  return !data.hidden;
+});
+
+// 获取所有分类
+const categories = [...new Set(allPosts.map((post) => post.data.category).filter(Boolean))];
+
+// 统计每个分类的文章数量
+const categoryCounts = categories.reduce((acc, category) => {
+  acc[category] = allPosts.filter(post => post.data.category === category).length;
+  return acc;
+}, {});
+
+// 分类名称和对应的英文目录名映射
+const categoryDirs = {
+  "学习": "learning",
+  "工作": "work",
+  "生活": "life",
+  "絮叨": "thoughts"
+};
+
+// 分类图标和颜色
+const categoryIcons = {
+  "学习": { icon: "ri:book-open-line", color: "text-blue-500 dark:text-blue-400", hoverColor: "group-hover:text-blue-600 dark:group-hover:text-blue-300", bgColor: "bg-blue-50 dark:bg-blue-900/30", hoverBgColor: "group-hover:bg-blue-100 dark:group-hover:bg-blue-800/40" },
+  "工作": { icon: "ri:briefcase-line", color: "text-green-500 dark:text-green-400", hoverColor: "group-hover:text-green-600 dark:group-hover:text-green-300", bgColor: "bg-green-50 dark:bg-green-900/30", hoverBgColor: "group-hover:bg-green-100 dark:group-hover:bg-green-800/40" },
+  "生活": { icon: "ri:heart-line", color: "text-red-500 dark:text-red-400", hoverColor: "group-hover:text-red-600 dark:group-hover:text-red-300", bgColor: "bg-red-50 dark:bg-red-900/30", hoverBgColor: "group-hover:bg-red-100 dark:group-hover:bg-red-800/40" },
+  "絮叨": { icon: "ri:chat-3-line", color: "text-purple-500 dark:text-purple-400", hoverColor: "group-hover:text-purple-600 dark:group-hover:text-purple-300", bgColor: "bg-purple-50 dark:bg-purple-900/30", hoverBgColor: "group-hover:bg-purple-100 dark:group-hover:bg-purple-800/40" }
+};
+---
+
+<ScaffoldLayout title="文章分类" description="按分类浏览博客文章" currentNav="Categories">
+  <h1 class="mb-8 text-5xl font-extrabold text-center">文章分类</h1>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto max-w-4xl">
+    {categories.map((category) => (
+      <a 
+        href={`/categories/${categoryDirs[category]}`} 
+        class="relative flex flex-col p-6 rounded-xl shadow-md backdrop-blur-sm bg-white/5 dark:bg-zinc-800/30 border border-zinc-200 dark:border-zinc-700 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group overflow-hidden"
+        aria-label={`查看${category}分类的所有文章`}
+      >
+        <div class="absolute -right-10 -top-10 w-40 h-40 bg-gradient-to-br from-transparent to-zinc-100/10 dark:to-white/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500 ease-out"></div>
+        
+        <div class="flex items-center gap-3 mb-4 relative">
+          <div class={`p-3 rounded-full ${categoryIcons[category].color} ${categoryIcons[category].hoverColor} ${categoryIcons[category].bgColor} ${categoryIcons[category].hoverBgColor} transition-all duration-300`}>
+            <Icon name={categoryIcons[category].icon} class="size-8 transform transition-transform duration-500 ease-out group-hover:rotate-12 group-hover:scale-110" />
+          </div>
+          <div class="flex-1">
+            <h2 class="text-2xl font-bold transform transition-all duration-300 translate-x-0 group-hover:translate-x-2">{category}</h2>
+            <div class="text-sm opacity-75 mt-1 transition-all duration-500 group-hover:opacity-100">
+              {categoryCounts[category]} 篇文章
+            </div>
+          </div>
+        </div>
+        
+        <p class="text-zinc-600 dark:text-zinc-300 mb-4 transition-all duration-300 group-hover:text-zinc-800 dark:group-hover:text-white">
+          {
+            category === "学习" && "技术教程、学习笔记、知识分享等内容"
+          }
+          {
+            category === "工作" && "职场经验、项目管理、效率工具等实用内容"
+          }
+          {
+            category === "生活" && "旅行、美食、健康、读书等生活体验分享"
+          }
+          {
+            category === "絮叨" && "随想、日常记录、个人感悟等随笔内容"
+          }
+        </p>
+        
+        <div class="text-sm font-medium mt-auto flex items-center text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-700 dark:group-hover:text-zinc-200 transition-all duration-300">
+          <span class="relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-current group-hover:after:w-full after:transition-all after:duration-300 group-hover:font-semibold">浏览全部</span>
+          <Icon name="ri:arrow-right-s-line" class="size-5 ml-1 transition-transform duration-300 group-hover:translate-x-2" />
+        </div>
+      </a>
+    ))}
+  </div>
+</ScaffoldLayout> 

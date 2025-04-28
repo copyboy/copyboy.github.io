@@ -1,0 +1,132 @@
+---
+description: 博客内容分类规划
+globs: 
+alwaysApply: false
+---
+# 博客内容分类规划
+
+## 内容分类架构
+- 博客内容分为四大核心类别：学习、工作、生活、絮叨
+- 分类实现方式：通过文章front matter中的`category`字段标记
+- 示例:
+  ```markdown
+  ---
+  title: "Java并发编程实践"
+  date: "2023-10-15"
+  category: "学习"
+  tags: ["Java", "并发", "编程"]
+  ---
+  ```
+
+## 分类内容指南
+
+### 学习类文章
+- **特点**：知识分享、技术教程、学习笔记、读书心得
+- **风格要求**：
+  - 结构清晰，层次分明
+  - 内容深入浅出，适合不同水平读者
+  - 包含实用代码示例和图表说明
+  - 提供参考资料和进一步学习资源
+- **子分类建议**：
+  - 编程语言（Java, Python, Go等）
+  - 技术框架（Spring, React, Vue等）
+  - 算法与数据结构
+  - 系统设计与架构
+  - 学习方法论
+- **目录示例**：`src/content/posts/learning/java-concurrency.md`
+
+### 工作类文章
+- **特点**：职场经验、项目管理、团队协作、技术选型
+- **风格要求**：
+  - 内容实用性强，可操作性高
+  - 结合真实工作场景
+  - 分享经验教训和最佳实践
+  - 保持专业客观的语调
+- **子分类建议**：
+  - 项目管理
+  - 技术面试
+  - 职业发展
+  - 远程工作
+  - 效率与工具
+- **目录示例**：`src/content/posts/work/project-management-tips.md`
+
+### 生活类文章
+- **特点**：兴趣爱好、健康养生、旅行见闻、生活感悟
+- **风格要求**：
+  - 语言生动活泼，富有感染力
+  - 配图精美，展现生活美好
+  - 内容真实，避免过度修饰
+  - 分享有价值的个人经验
+- **子分类建议**：
+  - 旅行游记
+  - 美食烹饪
+  - 健康与运动
+  - 阅读与书评
+  - 数码与装备
+- **目录示例**：`src/content/posts/life/hiking-experience.md`
+
+### 絮叨类文章
+- **特点**：随笔感想、碎碎念、日常记录、情绪抒发
+- **风格要求**：
+  - 风格自由，不拘一格
+  - 真实表达个人情感和想法
+  - 可以更加个人化和主观
+  - 保持适当的幽默感和共情力
+- **子分类建议**：
+  - 日常随笔
+  - 思考与反思
+  - 周记与月报
+  - 灵感与创意
+- **目录示例**：`src/content/posts/thoughts/random-thoughts-2023.md`
+
+## 内容展示与导航
+
+### 分类导航（Categories Tab）
+- 在顶部导航栏中新增了Categories标签页
+- 点击可访问`/categories`页面，展示所有文章分类
+- 每个分类使用差异化的视觉设计和图标：
+  - 学习：蓝色图标（ri:book-open-line）
+  - 工作：绿色图标（ri:briefcase-line）
+  - 生活：红色图标（ri:heart-line）
+  - 絮叨：紫色图标（ri:chat-3-line）
+
+### UI设计
+- 分类列表页（`/categories`）采用卡片式设计
+- 每个分类卡片包含：
+  - 分类名称
+  - 分类图标
+  - 文章数量统计
+  - 分类简介
+  - 动画效果：悬停时轻微上浮和阴影增强
+- 单个分类页面使用CategorySidebar组件，提供树形结构导航：
+  - 按系列（series）和标签（tags）组织文章
+  - 支持折叠/展开功能
+  - 当前文章高亮显示
+
+### 分类页面
+- 为每个分类创建独立的列表页面：
+  - `/categories/learning` - 学习类文章列表
+  - `/categories/work` - 工作类文章列表
+  - `/categories/life` - 生活类文章列表
+  - `/categories/thoughts` - 絮叨类文章列表
+
+### 实现方式
+- 在[src/pages/categories/](mdc:src/pages/categories)目录下创建对应的分类页面
+- 在[src/components/Nav.astro](mdc:src/components/Nav.astro)中添加Categories导航项
+- 在[src/components/CategorySidebar.astro](mdc:src/components/CategorySidebar.astro)中实现分类侧边栏
+- 确保在[src/content/config.ts](mdc:src/content/config.ts)中正确定义category字段
+
+## 内容创作频率建议
+- 学习类：每月2-3篇，深度内容
+- 工作类：每月1-2篇，注重实用性
+- 生活类：每月2-4篇，轻松有趣
+- 絮叨类：每周1篇，保持博客活跃度
+
+## 内容质量标准
+- 无论哪种分类，都应保持基本质量标准：
+  - 文章结构清晰
+  - 语言通顺易懂
+  - 内容真实有价值
+  - 图文并茂，提升阅读体验
+- 特别注意学习和工作类文章的专业性和准确性
+- 生活和絮叨类文章注重真实性和共情性
